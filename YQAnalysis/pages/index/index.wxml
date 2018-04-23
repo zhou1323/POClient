@@ -1,0 +1,113 @@
+<!--index.wxml-->
+<scroll-view scroll-y="true" class="container">
+
+  <block wx:for="{{result}}" wx:for-index="idx" wx:for-item="item" data-idx="{{idx}}">
+    <view class="feed-item">
+      <view class="feed-source" bindtap='onChangeShowState'>
+        <a class="">
+          <view class="avatar">
+            <image src="{{'../../images/'+item.eType+'.jpg'}}"></image>
+          </view>
+          <text>{{item.type}}</text>
+        </a>
+      </view>
+      <view wx:for="{{item.data}}" wx:for-item="temp" class="'feed-content '+{{showView?'show':'hide'}}">
+        <!--知乎-->
+        <view wx:if="{{item.eType=='zhihu'}}">
+          <view class="question" qid="{{question_id}}" bindtap="bindQueTap">
+            <a class="question-link">
+              <text>{{temp.question}}</text>
+            </a>
+          </view>
+          <view class="answer-body">
+            <view bindtap="bindItemTap">
+              <text class="answer-txt" aid="{{answer_id}}">{{item.answer_ctnt}}</text>
+            </view>
+            <view class="answer-actions" bindtap="bindItemTap">
+              <view class="like dot">
+                <a>{{temp.good_num}} 人关注 </a>
+              </view>
+              <view class="comments">
+                <a>{{temp.comment_num}} 评论 </a>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!--微博-->
+        <view wx:elif="{{item.eType=='weibo'}}">
+          <view class="head-info" style="margin: 0 0 15rpx 0;">
+            <image class="userimg" src="/images/zhihu.jpg" />
+            <view class="userinfo" style="display:inline-block">
+              <text class="username" style="color:black;display:block">{{temp.feed_source_name}}</text>
+              <text class="time" style="display:block">{{temp.time}}</text>
+            </view>
+          </view>
+
+          <view class="content-info" style="margin: 0 0 10rpx 0;">
+            <view>
+              <text class="weiboContent">{{temp.answer_ctnt}}</text>
+            </view>
+          </view>
+
+          <view class="bar-info" style="margin: 0 0 20rpx 0;">
+            <view class="bar-info-item" style='display:inline-block'>
+              <image class="bar-info-item-icon" src="/images/repost.jpg"></image>
+              <view class="bar-info-item-number">{{temp.good_num}}</view>
+            </view>
+            <view class="bar-info-item" style='display:inline-block'>
+              <image class="bar-info-item-icon" src="/images/comment.jpg"></image>
+              <view class="bar-info-item-number">{{temp.comment_num}}</view>
+            </view>
+          </view>
+        </view>
+
+        <!--微信-->
+        <view wx:elif="{{item.eType=='weixin'}}">
+          <view class="head-info" style="margin: 0 0 15rpx 0;">
+            <image class="userimg" src="/images/zhihu.jpg" />
+            <view class="userinfo" style="display:inline-block">
+              <text class="username" style="color:black">{{temp.feed_source_name}}</text>
+              <text class="weixinTime">{{temp.time}}</text>
+              <text class="weixinTitle" style="display:block">{{temp.question}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!--头条-->
+        <view wx:elif="{{item.eType=='toutiao'}}">
+          <view class="answer-body">
+            <view bindtap="bindItemTap">
+              <text class="answer-txt" style="font-size:30rpx;color:black;" aid="{{answer_id}}">{{temp.question}}</text>
+            </view>
+            <view class="answer-actions" bindtap="bindItemTap">
+              <view class="like">
+                <a>{{temp.feed_source_name}} </a>
+              </view>
+              <view class="reads">
+                <a>{{temp.comment_num}} 阅读 </a>
+              </view>
+              <view class="comments">
+                <a>{{temp.comment_num}} 评论 </a>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!--主流新闻媒体-->
+        <view wx:elif="{{item.eType=='news'}}">
+          <view class="answer-body">
+            <view bindtap="bindItemTap">
+              <text class="answer-txt" style="font-size:30rpx;color:black;" aid="{{answer_id}}">{{temp.question}}</text>
+            </view>
+            <view class="answer-actions" bindtap="bindItemTap">
+              <view class="like">
+                <a>{{temp.feed_source_name}} </a>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</scroll-view>
