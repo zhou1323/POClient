@@ -1,113 +1,163 @@
 <!--index.wxml-->
+
 <scroll-view scroll-y="true" class="container">
 
-  <block wx:for="{{result}}" wx:for-index="idx" wx:for-item="item" data-idx="{{idx}}">
-    <view class="feed-item">
-      <view class="feed-source" bindtap='onChangeShowState'>
-        <a class="">
-          <view class="avatar">
-            <image src="{{'../../images/'+item.eType+'.jpg'}}"></image>
-          </view>
-          <text>{{item.type}}</text>
-        </a>
-      </view>
-      <view wx:for="{{item.data}}" wx:for-item="temp" class="'feed-content '+{{showView?'show':'hide'}}">
-        <!--知乎-->
-        <view wx:if="{{item.eType=='zhihu'}}">
-          <view class="question" qid="{{question_id}}" bindtap="bindQueTap">
-            <a class="question-link">
-              <text>{{temp.question}}</text>
-            </a>
-          </view>
-          <view class="answer-body">
-            <view bindtap="bindItemTap">
-              <text class="answer-txt" aid="{{answer_id}}">{{item.answer_ctnt}}</text>
+  <view class="allNewsContent">
+    <!--微博板块-->
+    <block class="weibo">
+      <view class="feed-item">
+        <view class="feed-source" bindtap='onChangeShowState'>
+          <a class="">
+            <view class="avatar">
+              <image src="{{'../../images/weibo.jpg'}}"></image>
             </view>
-            <view class="answer-actions" bindtap="bindItemTap">
-              <view class="like dot">
-                <a>{{temp.good_num}} 人关注 </a>
-              </view>
-              <view class="comments">
-                <a>{{temp.comment_num}} 评论 </a>
-              </view>
-            </view>
-          </view>
+            <text>微博</text>
+          </a>
         </view>
 
-        <!--微博-->
-        <view wx:elif="{{item.eType=='weibo'}}">
+        <view wx:for="{{weiboContent}}" wx:for-index="idx" wx:for-item="weiboItem">
           <view class="head-info" style="margin: 0 0 15rpx 0;">
-            <image class="userimg" src="/images/zhihu.jpg" />
+            <image class="userimg" src="{{weiboItem._source.author_avator}}" />
             <view class="userinfo" style="display:inline-block">
-              <text class="username" style="color:black;display:block">{{temp.feed_source_name}}</text>
-              <text class="time" style="display:block">{{temp.time}}</text>
+              <a class="username" style="color:black;display:block" src="baidu.com">{{weiboItem._source.author_name}}</a>
+              <text class="time" style="display:block">{{weiboItem._source.time_str}}</text>
             </view>
           </view>
 
           <view class="content-info" style="margin: 0 0 10rpx 0;">
             <view>
-              <text class="weiboContent">{{temp.answer_ctnt}}</text>
+              <text class="weiboContent">{{weiboItem._source.title}}</text>
             </view>
           </view>
 
           <view class="bar-info" style="margin: 0 0 20rpx 0;">
             <view class="bar-info-item" style='display:inline-block'>
               <image class="bar-info-item-icon" src="/images/repost.jpg"></image>
-              <view class="bar-info-item-number">{{temp.good_num}}</view>
+              <view class="bar-info-item-number">{{weiboItem._source.shares}}</view>
             </view>
             <view class="bar-info-item" style='display:inline-block'>
               <image class="bar-info-item-icon" src="/images/comment.jpg"></image>
-              <view class="bar-info-item-number">{{temp.comment_num}}</view>
-            </view>
-          </view>
-        </view>
-
-        <!--微信-->
-        <view wx:elif="{{item.eType=='weixin'}}">
-          <view class="head-info" style="margin: 0 0 15rpx 0;">
-            <image class="userimg" src="/images/zhihu.jpg" />
-            <view class="userinfo" style="display:inline-block">
-              <text class="username" style="color:black">{{temp.feed_source_name}}</text>
-              <text class="weixinTime">{{temp.time}}</text>
-              <text class="weixinTitle" style="display:block">{{temp.question}}</text>
-            </view>
-          </view>
-        </view>
-
-        <!--头条-->
-        <view wx:elif="{{item.eType=='toutiao'}}">
-          <view class="answer-body">
-            <view bindtap="bindItemTap">
-              <text class="answer-txt" style="font-size:30rpx;color:black;" aid="{{answer_id}}">{{temp.question}}</text>
-            </view>
-            <view class="answer-actions" bindtap="bindItemTap">
-              <view class="like">
-                <a>{{temp.feed_source_name}} </a>
-              </view>
-              <view class="reads">
-                <a>{{temp.comment_num}} 阅读 </a>
-              </view>
-              <view class="comments">
-                <a>{{temp.comment_num}} 评论 </a>
-              </view>
-            </view>
-          </view>
-        </view>
-
-        <!--主流新闻媒体-->
-        <view wx:elif="{{item.eType=='news'}}">
-          <view class="answer-body">
-            <view bindtap="bindItemTap">
-              <text class="answer-txt" style="font-size:30rpx;color:black;" aid="{{answer_id}}">{{temp.question}}</text>
-            </view>
-            <view class="answer-actions" bindtap="bindItemTap">
-              <view class="like">
-                <a>{{temp.feed_source_name}} </a>
-              </view>
+              <view class="bar-info-item-number">{{weiboItem._source.comments}}</view>
             </view>
           </view>
         </view>
       </view>
-    </view>
-  </block>
+    </block>
+
+    <!--微信板块-->
+    <block class="weixin">
+      <view class="feed-item">
+        <view class="feed-source" bindtap='onChangeShowState'>
+          <a class="">
+            <view class="avatar">
+              <image src="{{'../../images/weixin.jpg'}}"></image>
+            </view>
+            <text>微信</text>
+          </a>
+        </view>
+        <view wx:for="{{weixinContent}}" wx:for-index="idx" wx:for-item="weixinItem">
+          <view class="head-info" style="margin: 0 0 15rpx 0;">
+            <image class="userimg" src="{{weixinItem._source.avator}}" />
+            <view class="userinfo" style="display:inline-block">
+              <text class="username" style="color:black">{{weixinItem._source.author_name}}</text>
+              <text class="weixinTime">{{weixinItem._source.time_str}}</text>
+              <text class="weixinTitle" style="display:block;">{{weixinItem._source.title}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--知乎板块-->
+    <block class="zhihu">
+      <view class="feed-item">
+        <view class="feed-source" bindtap='onChangeShowState'>
+          <a class="">
+            <view class="avatar">
+              <image src="{{'../../images/zhihu.jpg'}}"></image>
+            </view>
+            <text>知乎</text>
+          </a>
+        </view>
+        <view wx:for="{{zhihuContent}}" class="feed-content" wx:for-index="idx" wx:for-item="zhihuItem">
+          <view class="question">
+              <a class="question-link">
+                <text>{{zhihuItem._source.title}}</text>
+              </a>
+            </view>
+            <view class="answer-body">
+              <view bindtap="bindItemTap">
+                <text class="answer-txt" aid="{{answer_id}}">{{zhihuItem._source.brief}}</text>
+              </view>
+              <view class="answer-actions" bindtap="bindItemTap">
+                <view class="like dot">
+                  <a>{{zhihuItem._source.books}} 人关注 </a>
+                </view>
+                <view class="comments">
+                  <a>{{zhihuItem._source.answers}} 回答 </a>
+                </view>
+              </view>
+            </view>
+        </view>
+      </view>
+    </block>
+
+    <!--头条板块-->
+    <block class="toutiao">
+      <view class="feed-item">
+        <view class="feed-source" bindtap='onChangeShowState'>
+          <a class="">
+            <view class="avatar">
+              <image src="{{'../../images/toutiao.jpg'}}"></image>
+            </view>
+            <text>今日头条</text>
+          </a>
+        </view>
+        <view wx:for="{{toutiaoContent}}" class="feed-content" wx:for-index="idx" wx:for-item="toutiaoItem">
+          <view class="answer-body">
+              <view bindtap="bindItemTap">
+                <text class="answer-txt" style="font-size:30rpx;color:black;">{{toutiaoItem._source.title}}</text>
+              </view>
+              <view class="answer-actions" bindtap="bindItemTap">
+                <view class="like">
+                  <a>{{toutiaoItem._source.author_name}} </a>
+                </view>
+                <view class="reads">
+                  <a>{{toutiaoItem._source.reads}} 阅读 </a>
+                </view>
+                <view class="comments">
+                  <a>{{toutiaoItem._source.comments}} 评论 </a>
+                </view>
+              </view>
+            </view>
+        </view>
+      </view>
+    </block>
+
+    <!--头条板块-->
+    <block class="news" style="display:block">
+      <view class="feed-item">
+        <view class="feed-source" bindtap='onChangeShowState'>
+          <a class="">
+            <view class="avatar">
+              <image src="{{'../../images/news.jpg'}}"></image>
+            </view>
+            <text>主流媒体</text>
+          </a>
+        </view>
+        <view wx:for="{{newsContent}}" class="feed-content" wx:for-index="idx" wx:for-item="newsItem">
+          <view class="answer-body">
+              <view bindtap="bindItemTap">
+                <text class="answer-txt" style="font-size:30rpx;color:black;">{{newsItem._source.title}}</text>
+              </view>
+              <view class="answer-actions" bindtap="bindItemTap">
+                <view class="like">
+                  <a>{{newsItem._source.author_name}} </a>
+                </view>
+              </view>
+            </view>
+        </view>
+      </view>
+    </block>
+  </view>
 </scroll-view>
