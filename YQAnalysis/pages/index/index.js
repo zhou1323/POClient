@@ -1,117 +1,134 @@
-var util = require('../../utils/util.js');
-var app=getApp();
+//index.js
+//获取应用实例
+const app = getApp()
+
 Page({
-  data: {
-    scroll_height:'',
-    showWeibo: false,
-    showWeixin:false,
-    showZhihu:false,
-    showToutiao:false,
-    showNews:false,
-    weiboContent: null,
-    weixinContent: null,
-    zhihuContent:null,
-    toutiaoContent:null,
-    newsContent:null
-  },
-  onLoad: function (options) {
-    // 生命周期函数--监听页面加载  
-    //showView: (options.showView == "true" ? true : false);
-
-    var weiboArr = [];
-    var that = this;
-    //, 'powechatitem','zhihuitem', 'toutiaoitem','newsitem'
-    var scopeArray = ['poweiboitem', 'powechatitem', 'zhihuitem', 'toutiaoitem', 'newsitem'];
-    var contents = [];
-    var weibo;
-    for (var j = 0, len = scopeArray.length; j < len; j++) {
-      (function(j){
-      util.getData("python", scopeArray[j])
-        .then(function (data) {
-          var actualData = data.data;
-          var simpleItem = actualData.result.items;
-          for (var i = 0; i < simpleItem.length; i++) {
-            simpleItem[i]._source.title=simpleItem[i]._source.title.replace(/<[\w\s\"\/\=]+>/g,"");
-          }
-
-          
-          if(j==0){
-            console.log("0");
-            that.setData({
-              weiboContent: simpleItem
-            })
-          }
-          else if (j == 1) {
-            console.log("1");
-            that.setData({
-              weixinContent: simpleItem
-            })
-          }
-          else if(j==2){
-            console.log("2");
-            that.setData({
-              zhihuContent: simpleItem
-            })
-          }
-          else if (j == 3) {
-            that.setData({
-              toutiaoContent: simpleItem
-            })
-          }
-          else if (j == 4) {
-            that.setData({
-              newsContent: simpleItem
-            })
-          }
-          
-        });
-        })(j);
-    }
-  },
-  onChangeShowState: function (event) {
-    var that = this;
-    var scope=event.currentTarget.dataset.scope;
-
-    console.log(scope);
-    if(scope=='weibo'){
-      that.setData({
-        showWeibo: (!that.data.showWeibo)
-      });
-    }
-    else if (scope == 'weixin') {
-      that.setData({
-        showWeixin: (!that.data.showWeixin)
-      });
-    }
-    else if (scope == 'zhihu') {
-      that.setData({
-        showZhihu: (!that.data.showZhihu)
-      });
-    }
-    else if (scope == 'toutiao') {
-      that.setData({
-        showToutiao: (!that.data.showToutiao)
-      });
-    }
-    else if (scope == 'news') {
-      that.setData({
-        showNews: (!that.data.showNews)
-      });
-    }
-  },
-  bindDetailView:function(event){
-    var nowUrl = event.currentTarget.dataset.url;
-    console.log(nowUrl);
-    app.detailUrl=nowUrl;
-    wx.navigateTo({
-      url:"../detail/detail"
+  data:{
+    showView:true,
+    search:''
+ },
+ 
+  searchInput: function (e) {
+    this.setData({
+      search: e.detail.value
     })
   },
-  scroll: function (e) {
-    var that = this;
-    //console.log(e.detail.scrollTop)
-    that.setData({
-      scroll_height: e.detail.scrollTop
+  searchSubmit: function () {
+   // console.log("点击了回车");
+      this.setData({
+      search: e.detail.value
+     })
+  },
+
+   onLoad: function (options) {
+    // 页面初始化 options为页面跳转所带来的参数
+
+     console.log('onLoad')
+     var that = this;
+     wx.request({
+       url: 'https://api.niucodata.com/api/vip/items/?access_token=df6cfe180cc1aae3faabeccccf3a716c705c410e',
+       header: {
+         'content-type': 'application/json'
+       },
+       data: {//请求的参数
+         'keywords': '大学考到哪就把他带到哪',
+         "scope": "poweiboitem",
+         'limit': '20'
+       },
+       //请求后台数据成功
+       success: function (res) {
+         that.setData({
+           weibo:  res.data
+         })
+       }
+     })
+
+
+  },
+  onReady: function () {
+    // 页面渲染完成
+  },
+  onShow: function () {
+    // 页面显示
+  },
+  onHide: function () {
+    // 页面隐藏
+  },
+  onUnload: function () {
+    // 页面关闭
+  },
+  focusSearch: function () {
+    if (this.data.search.searchValue) {
+      this.setData({
+        'search.showClearBtn': true
+      })
+    }
+  },
+  jump: function () {
+    wx.navigateTo({
+      url: '../analysis/analysis'
+    })
+  },
+
+  data: {
+    imageUrl: "images/icon.jpg",  
+    navbar: ['微博', '豆瓣', '知乎', '淘宝'],
+    currentTab: 0
+  },
+  navbarTap: function (e) {
+    console.log(e)
+    this.setData({
+      currentTab: e.currentTarget.dataset.idx
     })
   }
-})  
+
+  // data: {
+  //   motto: 'Hello World',
+  //   userInfo: {},
+  //   hasUserInfo: false,
+  //   canIUse: wx.canIUse('button.open-type.getUserInfo')
+  // },
+  // //事件处理函数
+  // bindViewTap: function() {
+  //   wx.navigateTo({
+  //     url: '../logs/logs'
+  //   })
+  // },
+  // onLoad: function () {
+  //   if (app.globalData.userInfo) {
+  //     this.setData({
+  //       userInfo: app.globalData.userInfo,
+  //       hasUserInfo: true
+  //     })
+  //   } else if (this.data.canIUse){
+  //     // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+  //     // 所以此处加入 callback 以防止这种情况
+  //     app.userInfoReadyCallback = res => {
+  //       this.setData({
+  //         userInfo: res.userInfo,
+  //         hasUserInfo: true
+  //       })
+  //     }
+  //   } else {
+  //     // 在没有 open-type=getUserInfo 版本的兼容处理
+  //     wx.getUserInfo({
+  //       success: res => {
+  //         app.globalData.userInfo = res.userInfo
+  //         this.setData({
+  //           userInfo: res.userInfo,
+  //           hasUserInfo: true
+  //         })
+  //       }
+  //     })
+  //   }
+  // },
+  // getUserInfo: function(e) {
+  //   console.log(e)
+  //   app.globalData.userInfo = e.detail.userInfo
+  //   this.setData({
+  //     userInfo: e.detail.userInfo,
+  //     hasUserInfo: true
+  //   })
+  // }
+  
+})

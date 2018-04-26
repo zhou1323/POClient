@@ -1,10 +1,13 @@
-.log-list {
-  display: flex;
-  flex-direction: column;
-  padding: 40rpx;
-}
-.log-item {
-  margin: 10rpx;
+/* pages/userfollow/follow.wxss */
+.brand-img{
+  position: fixed;
+  height: 25%;
+  width: 100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;/*垂直居中*/
+  justify-content: center;/*水平居中*/
+
 }
 .nav{
   display: flex;
@@ -14,14 +17,9 @@
   align-items: center;
   justify-content: center
 }
-.brand-img{
-  height: 80%;
-  width:100%
-}
-
 .avatar-wrapper {
-  background: #1b82d1;
-  padding: 25px 0;
+  image-orientation: vertical;
+  padding: 40px 0;
 }
 
 .avatar-wrapper .avatar {
@@ -44,11 +42,4 @@
   vertical-align: middle;
   width: 20px;
   height: 20px;
-}
-
-.textview{
-   text-align: left; 
-  line-height: 60rpx; 
-  font-size: 15px;
-  color: black
 }
